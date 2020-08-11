@@ -107,14 +107,46 @@ class MetaCorgiSnacks
   def initialize(snack_box, box_id)
     @snack_box = snack_box
     @box_id = box_id
+    snack_box.methods.grep(/^get_(.*)_info$/) { MetaCorgiSnacks.define_snack $1 }
   end
 
-  def method_missing(name, *args)
-    # Your code goes here...
-  end
+  # def method_missing(name, *args)
+  #   # Your code goes here...
+  #   method_name = name.to_s
+  #   if method_name.start_with?("find_by")
+  #     attributes_string = method_name[("find_by_".length)..-1]
+
+  #     # attribute_names is, e.g., ["first_name", "last_name"]
+  #     attribute_names = attributes_string.split("_and_")
+
+  #     unless attribute_names.length == args.length
+  #       raise "unexpected # of arguments"
+  #     end
+
+  #     search_conditions = {}
+  #     attribute_names.length.times do |i|
+  #       search_conditions[attribute_names[i]] = args[i]
+  #     end
+
+  #     # Imagine search takes a hash of search conditions and finds
+  #     # objects with the given properties.
+  #     self.search(search_conditions)
+  #   else
+  #     # complain about the missing method
+  #     super
+  #   end
+
+  # end
 
 
   def self.define_snack(name)
     # Your code goes here...
+    define_method(name) do
+      info = @snack_box.send("get_#{name}_info", @box_id)
+      tastiness = @snack_box.send("get_#{name}_tastiness", @box_id)
+      display_name = "#{name.split('_').map(&:capitalize).join(' ')}"
+      result = "#{display_name}: #{info}: #{tastiness}"
+      tastiness > 30 ? "* #{result}" : result 
+    end
   end
 end
