@@ -50,6 +50,7 @@ def handle_request(socket)
 
       socket.puts "HTTP/1.1 200 OK"
       socket.puts
+
       socket.puts $cats.to_json
     elsif verb == "GET" && cat_regex =~ path
       # GET /cats/123
