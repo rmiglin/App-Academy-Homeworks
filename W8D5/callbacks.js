@@ -1,3 +1,3 @@
-function setTimeout(){
-    
-}
+window.setTimeout = (function(){
+    alert('HAMMERTIME');
+}, 5000);
